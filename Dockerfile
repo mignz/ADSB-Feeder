@@ -1,4 +1,4 @@
-FROM debian:10.2-slim
+FROM debian:10.3-slim
 
 LABEL maintainer="me@mnunes.com"
 
@@ -6,7 +6,8 @@ ENV S6_VERSION=2.7.2.2-3 \
     RTLSDR_VERSION=0.6-1 \
     DUMP1090_VERSION=v3.8.0 \
     PIAWARE_VERSION=3.8.0 \
-    FR24FEED_VERSION=1.0.24-5
+    FR24FEED_VERSION=1.0.24-5 \
+    PFCLIENT_VERSION=4.1.1
 
 ENV MAPLAT=45.0 \
     MAPLON=9.0 \
@@ -28,6 +29,7 @@ RUN apt-get update && \
         libncurses5-dev \
         libbladerf-dev \
         dh-systemd \
+        libc6-i386 libc6-dev-i386 \
         libz-dev \
         libboost-system-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev \
         rtl-sdr=$RTLSDR_VERSION librtlsdr-dev=$RTLSDR_VERSION \
@@ -54,7 +56,11 @@ RUN apt-get update && \
     tar zxvf fr24feed_${FR24FEED_VERSION}_amd64.tgz && \
     rm fr24feed_${FR24FEED_VERSION}_amd64.tgz && \
     mv /fr24feed_amd64/fr24feed /usr/bin && \
-    rm -rf /fr24feed_amd64
+    rm -rf /fr24feed_amd64 && \
+    cd / && wget -O pfclient.tar.gz http://client.planefinder.net/pfclient_${PFCLIENT_VERSION}_i386.tar.gz && \
+    tar zxvf pfclient.tar.gz && \
+    mv pfclient /usr/bin && \
+    rm -rf pfclient.tar.gz
 
 ADD files /
 
@@ -66,6 +72,6 @@ RUN chmod +x /etc/s6/fr24feed/* && \
     apt-get autoremove --yes && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-EXPOSE 8080 8754
+EXPOSE 8080 8754 30053
 
 ENTRYPOINT ["/start.sh"]
