@@ -66,6 +66,7 @@ ADD files /
 
 RUN chmod +x /etc/s6/fr24feed/* && \
     chmod +x /etc/s6/lighttpd/* && \
+    chmod +x /etc/s6/pfclient/* && \
     chmod +x /etc/s6/piaware/* && \
     chmod +x /start.sh && \
     apt-get clean autoclean && \

@@ -65,3 +65,4 @@ cd ADSB-Feeder && docker build -t adsb-feeder .
 ### 1.1.0
 
 - Added Plane Finder
+- Added a favicon to PiAware Skyview
